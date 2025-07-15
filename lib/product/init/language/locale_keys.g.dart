@@ -94,5 +94,25 @@ abstract class  LocaleKeys {
   static const stock_price_warehouse_no = 'stock.price_warehouse_no';
   static const stock_warehouse = 'stock.warehouse';
   static const stock = 'stock';
+  static const current_current_detail = 'current.current_detail';
+  static const current_code = 'current.code';
+  static const current_search_type_name = 'current.search_type_name';
+  static const current_search_type_code = 'current.search_type_code';
+  static const current_general = 'current.general';
+  static const current_current_general_info = 'current.current_general_info';
+  static const current_current_name = 'current.current_name';
+  static const current_tax_office_name = 'current.tax_office_name';
+  static const current_tax_office_no = 'current.tax_office_no';
+  static const current_nace_code = 'current.nace_code';
+  static const current_nace_code2 = 'current.nace_code2';
+  static const current_balance = 'current.balance';
+  static const current_contact = 'current.contact';
+  static const current_email = 'current.email';
+  static const current_mobile_phone = 'current.mobile_phone';
+  static const current_country_city = 'current.country_city';
+  static const current_address = 'current.address';
+  static const current_see_location = 'current.see_location';
+  static const current_updated_at = 'current.updated_at';
+  static const current = 'current';
 
 }

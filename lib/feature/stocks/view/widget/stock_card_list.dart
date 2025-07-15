@@ -51,9 +51,9 @@ class _StockCardList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    RowTextWidget(title: 'Stok Kodu:', description: stock.stockCode ?? ''),
+                    RowTextWidget(title: LocaleKeys.stock_code.tr(), description: stock.stockCode ?? ''),
                     RowTextWidget(
-                      title: 'Birim:',
+                      title: LocaleKeys.stock_unit_name.tr(),
                       description:
                           '(${stock.unitName} = ADET: ${(stock.unitMultiplier ?? 0) < 0 ? (-(stock.unitMultiplier ?? 0)) : stock.unitMultiplier})',
                     ),

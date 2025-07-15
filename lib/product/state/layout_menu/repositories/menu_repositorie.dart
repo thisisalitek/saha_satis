@@ -24,7 +24,7 @@ class MenuRepository {
           id: 'cariler',
           title: LocaleKeys.menu_currents,
           icon: BootstrapIcons.person_vcard_fill,
-          route: const SettingRoute(),
+          route: const CurrentRoute(),
           requiredPermissions: ['can_view_current'],
         ),
       ],

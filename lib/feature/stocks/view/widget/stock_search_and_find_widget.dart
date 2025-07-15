@@ -21,7 +21,7 @@ class StockSearchAndFindWidget extends StatelessWidget {
               child: CustomFormField(
                 controller: searchController,
                 fieldType: CustomFormFieldType.text,
-                isDone: false,
+                isDone: true,
                 decoration: customFormFieldDecoration(
                   context,
                   labelText: state.searchTypeText,

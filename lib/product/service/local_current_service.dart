@@ -6,7 +6,6 @@ enum CurrentAccountSearchType {
   accountCode,
   accountName;
 
-  // Enum değerini string olarak döndüren bir getter ekleyebiliriz (isteğe bağlı)
   String get value {
     switch (this) {
       case CurrentAccountSearchType.accountCode:
@@ -17,8 +16,8 @@ enum CurrentAccountSearchType {
   }
 }
 
-class LocalCariService {
-  LocalCariService();
+class LocalCurrentService {
+  LocalCurrentService();
 
   Future<List<CurrentAccountModel>> getFilteredCurrentAccounts({
     required CurrentAccountSearchType? searchType,
