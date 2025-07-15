@@ -6,12 +6,12 @@ import 'package:gen/gen.dart';
 import 'package:kartal/kartal.dart';
 import 'package:widgets/widgets.dart';
 
-import '../../../../../product/common/widget/one_info_card_widget.dart';
-import '../../../../../product/init/language/locale_keys.g.dart';
+import '../../../../product/common/widget/one_info_card_widget.dart';
+import '../../../../product/init/language/locale_keys.g.dart';
 
 @RoutePage()
-class PriceTabView extends StatelessWidget {
-  const PriceTabView({super.key, required this.stok});
+class StockPriceTabView extends StatelessWidget {
+  const StockPriceTabView({super.key, required this.stok});
   final StockCardModel stok;
 
   @override

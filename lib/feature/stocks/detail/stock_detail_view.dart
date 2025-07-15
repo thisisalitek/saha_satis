@@ -8,7 +8,7 @@ import 'package:gen/gen.dart';
 import 'package:kartal/kartal.dart';
 import 'package:widgets/widgets.dart';
 
-import '../../../../product/init/language/locale_keys.g.dart';
+import '../../../product/init/language/locale_keys.g.dart';
 
 @RoutePage()
 class StockDetailView extends StatelessWidget {
@@ -17,14 +17,14 @@ class StockDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AutoTabsRouter.tabBar(
-      routes: [GeneralTabRoute(stok: stok), PriceTabRoute(stok: stok), DepotTabRoute(stok: stok)],
-      builder: (context, child, controller) {
+      routes: [StockGeneralTabRoute(stok: stok), StockPriceTabRoute(stok: stok), StockDepotTabRoute(stok: stok)],
+      builder: (context, child, tabController) {
         return Scaffold(
           appBar: CustomAppBar(
             title: Text(LocaleKeys.stock_stock_detail).tr(),
             leading: AutoLeadingButton(color: context.general.colorScheme.primary),
             bottom: TabBar(
-              controller: controller,
+              controller: tabController,
               tabs: [
                 Tab(text: LocaleKeys.stock_general.tr(), icon: Icon(BootstrapIcons.info_circle_fill)),
                 Tab(text: LocaleKeys.stock_price.tr(), icon: Icon(BootstrapIcons.tags_fill)),

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:gen/gen.dart';
 
 @RoutePage()
-class DepotTabView extends StatelessWidget {
-  const DepotTabView({super.key, required this.stok});
+class StockDepotTabView extends StatelessWidget {
+  const StockDepotTabView({super.key, required this.stok});
   final StockCardModel stok;
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Text('depot tab'));
+    return Container(color: Colors.red);
   }
 }

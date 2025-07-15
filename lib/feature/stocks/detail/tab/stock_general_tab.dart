@@ -10,8 +10,8 @@ import 'package:kartal/kartal.dart';
 import 'package:widgets/widgets.dart';
 
 @RoutePage()
-class GeneralTabView extends StatelessWidget {
-  const GeneralTabView({super.key, required this.stok});
+class StockGeneralTabView extends StatelessWidget {
+  const StockGeneralTabView({super.key, required this.stok});
   final StockCardModel stok;
   @override
   Widget build(BuildContext context) {
