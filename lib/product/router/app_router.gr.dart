@@ -11,77 +11,167 @@
 part of 'app_router.dart';
 
 /// generated route for
-/// [DepotTabView]
-class DepotTabRoute extends PageRouteInfo<DepotTabRouteArgs> {
-  DepotTabRoute({
+/// [CurrentBalanceTabView]
+class CurrentBalanceTabRoute extends PageRouteInfo<CurrentBalanceTabRouteArgs> {
+  CurrentBalanceTabRoute({
     Key? key,
-    required StockCardModel stok,
+    required CurrentAccountModel current,
     List<PageRouteInfo>? children,
   }) : super(
-         DepotTabRoute.name,
-         args: DepotTabRouteArgs(key: key, stok: stok),
+         CurrentBalanceTabRoute.name,
+         args: CurrentBalanceTabRouteArgs(key: key, current: current),
          initialChildren: children,
        );
 
-  static const String name = 'DepotTabRoute';
+  static const String name = 'CurrentBalanceTabRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<DepotTabRouteArgs>();
-      return DepotTabView(key: args.key, stok: args.stok);
+      final args = data.argsAs<CurrentBalanceTabRouteArgs>();
+      return CurrentBalanceTabView(key: args.key, current: args.current);
     },
   );
 }
 
-class DepotTabRouteArgs {
-  const DepotTabRouteArgs({this.key, required this.stok});
+class CurrentBalanceTabRouteArgs {
+  const CurrentBalanceTabRouteArgs({this.key, required this.current});
 
   final Key? key;
 
-  final StockCardModel stok;
+  final CurrentAccountModel current;
 
   @override
   String toString() {
-    return 'DepotTabRouteArgs{key: $key, stok: $stok}';
+    return 'CurrentBalanceTabRouteArgs{key: $key, current: $current}';
   }
 }
 
 /// generated route for
-/// [GeneralTabView]
-class GeneralTabRoute extends PageRouteInfo<GeneralTabRouteArgs> {
-  GeneralTabRoute({
+/// [CurrentContactTabView]
+class CurrentContactTabRoute extends PageRouteInfo<CurrentContactTabRouteArgs> {
+  CurrentContactTabRoute({
     Key? key,
-    required StockCardModel stok,
+    required CurrentAccountModel current,
     List<PageRouteInfo>? children,
   }) : super(
-         GeneralTabRoute.name,
-         args: GeneralTabRouteArgs(key: key, stok: stok),
+         CurrentContactTabRoute.name,
+         args: CurrentContactTabRouteArgs(key: key, current: current),
          initialChildren: children,
        );
 
-  static const String name = 'GeneralTabRoute';
+  static const String name = 'CurrentContactTabRoute';
 
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
-      final args = data.argsAs<GeneralTabRouteArgs>();
-      return GeneralTabView(key: args.key, stok: args.stok);
+      final args = data.argsAs<CurrentContactTabRouteArgs>();
+      return CurrentContactTabView(key: args.key, current: args.current);
     },
   );
 }
 
-class GeneralTabRouteArgs {
-  const GeneralTabRouteArgs({this.key, required this.stok});
+class CurrentContactTabRouteArgs {
+  const CurrentContactTabRouteArgs({this.key, required this.current});
 
   final Key? key;
 
-  final StockCardModel stok;
+  final CurrentAccountModel current;
 
   @override
   String toString() {
-    return 'GeneralTabRouteArgs{key: $key, stok: $stok}';
+    return 'CurrentContactTabRouteArgs{key: $key, current: $current}';
   }
+}
+
+/// generated route for
+/// [CurrentDetailView]
+class CurrentDetailRoute extends PageRouteInfo<CurrentDetailRouteArgs> {
+  CurrentDetailRoute({
+    Key? key,
+    required CurrentAccountModel current,
+    List<PageRouteInfo>? children,
+  }) : super(
+         CurrentDetailRoute.name,
+         args: CurrentDetailRouteArgs(key: key, current: current),
+         initialChildren: children,
+       );
+
+  static const String name = 'CurrentDetailRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CurrentDetailRouteArgs>();
+      return CurrentDetailView(key: args.key, current: args.current);
+    },
+  );
+}
+
+class CurrentDetailRouteArgs {
+  const CurrentDetailRouteArgs({this.key, required this.current});
+
+  final Key? key;
+
+  final CurrentAccountModel current;
+
+  @override
+  String toString() {
+    return 'CurrentDetailRouteArgs{key: $key, current: $current}';
+  }
+}
+
+/// generated route for
+/// [CurrentGeneralTabView]
+class CurrentGeneralTabRoute extends PageRouteInfo<CurrentGeneralTabRouteArgs> {
+  CurrentGeneralTabRoute({
+    Key? key,
+    required CurrentAccountModel current,
+    List<PageRouteInfo>? children,
+  }) : super(
+         CurrentGeneralTabRoute.name,
+         args: CurrentGeneralTabRouteArgs(key: key, current: current),
+         initialChildren: children,
+       );
+
+  static const String name = 'CurrentGeneralTabRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<CurrentGeneralTabRouteArgs>();
+      return CurrentGeneralTabView(key: args.key, current: args.current);
+    },
+  );
+}
+
+class CurrentGeneralTabRouteArgs {
+  const CurrentGeneralTabRouteArgs({this.key, required this.current});
+
+  final Key? key;
+
+  final CurrentAccountModel current;
+
+  @override
+  String toString() {
+    return 'CurrentGeneralTabRouteArgs{key: $key, current: $current}';
+  }
+}
+
+/// generated route for
+/// [CurrentView]
+class CurrentRoute extends PageRouteInfo<void> {
+  const CurrentRoute({List<PageRouteInfo>? children})
+    : super(CurrentRoute.name, initialChildren: children);
+
+  static const String name = 'CurrentRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      return const CurrentView();
+    },
+  );
 }
 
 /// generated route for
@@ -133,43 +223,6 @@ class LoginRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [PriceTabView]
-class PriceTabRoute extends PageRouteInfo<PriceTabRouteArgs> {
-  PriceTabRoute({
-    Key? key,
-    required StockCardModel stok,
-    List<PageRouteInfo>? children,
-  }) : super(
-         PriceTabRoute.name,
-         args: PriceTabRouteArgs(key: key, stok: stok),
-         initialChildren: children,
-       );
-
-  static const String name = 'PriceTabRoute';
-
-  static PageInfo page = PageInfo(
-    name,
-    builder: (data) {
-      final args = data.argsAs<PriceTabRouteArgs>();
-      return PriceTabView(key: args.key, stok: args.stok);
-    },
-  );
-}
-
-class PriceTabRouteArgs {
-  const PriceTabRouteArgs({this.key, required this.stok});
-
-  final Key? key;
-
-  final StockCardModel stok;
-
-  @override
-  String toString() {
-    return 'PriceTabRouteArgs{key: $key, stok: $stok}';
-  }
-}
-
-/// generated route for
 /// [SettingView]
 class SettingRoute extends PageRouteInfo<void> {
   const SettingRoute({List<PageRouteInfo>? children})
@@ -199,6 +252,43 @@ class SplashRoute extends PageRouteInfo<void> {
       return const SplashView();
     },
   );
+}
+
+/// generated route for
+/// [StockDepotTabView]
+class StockDepotTabRoute extends PageRouteInfo<StockDepotTabRouteArgs> {
+  StockDepotTabRoute({
+    Key? key,
+    required StockCardModel stok,
+    List<PageRouteInfo>? children,
+  }) : super(
+         StockDepotTabRoute.name,
+         args: StockDepotTabRouteArgs(key: key, stok: stok),
+         initialChildren: children,
+       );
+
+  static const String name = 'StockDepotTabRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<StockDepotTabRouteArgs>();
+      return StockDepotTabView(key: args.key, stok: args.stok);
+    },
+  );
+}
+
+class StockDepotTabRouteArgs {
+  const StockDepotTabRouteArgs({this.key, required this.stok});
+
+  final Key? key;
+
+  final StockCardModel stok;
+
+  @override
+  String toString() {
+    return 'StockDepotTabRouteArgs{key: $key, stok: $stok}';
+  }
 }
 
 /// generated route for
@@ -235,6 +325,80 @@ class StockDetailRouteArgs {
   @override
   String toString() {
     return 'StockDetailRouteArgs{key: $key, stok: $stok}';
+  }
+}
+
+/// generated route for
+/// [StockGeneralTabView]
+class StockGeneralTabRoute extends PageRouteInfo<StockGeneralTabRouteArgs> {
+  StockGeneralTabRoute({
+    Key? key,
+    required StockCardModel stok,
+    List<PageRouteInfo>? children,
+  }) : super(
+         StockGeneralTabRoute.name,
+         args: StockGeneralTabRouteArgs(key: key, stok: stok),
+         initialChildren: children,
+       );
+
+  static const String name = 'StockGeneralTabRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<StockGeneralTabRouteArgs>();
+      return StockGeneralTabView(key: args.key, stok: args.stok);
+    },
+  );
+}
+
+class StockGeneralTabRouteArgs {
+  const StockGeneralTabRouteArgs({this.key, required this.stok});
+
+  final Key? key;
+
+  final StockCardModel stok;
+
+  @override
+  String toString() {
+    return 'StockGeneralTabRouteArgs{key: $key, stok: $stok}';
+  }
+}
+
+/// generated route for
+/// [StockPriceTabView]
+class StockPriceTabRoute extends PageRouteInfo<StockPriceTabRouteArgs> {
+  StockPriceTabRoute({
+    Key? key,
+    required StockCardModel stok,
+    List<PageRouteInfo>? children,
+  }) : super(
+         StockPriceTabRoute.name,
+         args: StockPriceTabRouteArgs(key: key, stok: stok),
+         initialChildren: children,
+       );
+
+  static const String name = 'StockPriceTabRoute';
+
+  static PageInfo page = PageInfo(
+    name,
+    builder: (data) {
+      final args = data.argsAs<StockPriceTabRouteArgs>();
+      return StockPriceTabView(key: args.key, stok: args.stok);
+    },
+  );
+}
+
+class StockPriceTabRouteArgs {
+  const StockPriceTabRouteArgs({this.key, required this.stok});
+
+  final Key? key;
+
+  final StockCardModel stok;
+
+  @override
+  String toString() {
+    return 'StockPriceTabRouteArgs{key: $key, stok: $stok}';
   }
 }
 
