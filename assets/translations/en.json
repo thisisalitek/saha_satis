@@ -57,7 +57,7 @@
             },
             "yes": "Yes",
             "no": "No",
-            "copy":"Text copied"
+            "copy": "Text copied"
         }
     },
     "layout": {
@@ -102,5 +102,26 @@
         "list_sequence_no": "Sales List Number",
         "price_warehouse_no": "Sales Warehouse Number",
         "warehouse": "Warehouse"
+    },
+    "current": {
+        "current_detail": "Getting",
+        "code": "Kodu",
+        "search_type_name": "Adı Ara",
+        "search_type_code": "Kodu Ara",
+        "general": "General",
+        "current_general_info": "Current General Information",
+        "current_name": "Current address",
+        "tax_office_name": "Tax office",
+        "tax_office_no": "Tax Office Number",
+        "nace_code": "Nace code",
+        "nace_code2": "Nace code 2",
+        "balance": "Balance",
+        "contact": "Contact",
+        "email": "E-Mail ",
+        "mobile_phone": "Phone",
+        "country_city": "City",
+        "address": "Address",
+        "see_location": "See the location",
+        "updated_at": "Last Updated Date"
     }
 }

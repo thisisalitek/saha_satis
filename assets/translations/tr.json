@@ -57,7 +57,7 @@
             },
             "yes": "Evet",
             "no": "Hayır",
-            "copy":"Metin kopyalandı"
+            "copy": "Metin kopyalandı"
         }
     },
     "layout": {
@@ -102,5 +102,26 @@
         "list_sequence_no": "Satış Liste Numarası",
         "price_warehouse_no": "Satış Depo Numarası",
         "warehouse": "Depo"
+    },
+    "current": {
+        "current_detail": "Cari Detay",
+        "code": "Kodu",
+        "search_type_name": "Adı Ara",
+        "search_type_code": "Kodu Ara",
+        "general": "Genel",
+        "current_general_info": "Cari Genel Bilgileri",
+        "current_name": "Cari Ünvanı",
+        "tax_office_name": "Vergi Dairesi",
+        "tax_office_no": "Vergi Dairesi Numarası",
+        "nace_code": "Nace Kodu",
+        "nace_code2": "Nace Kodu 2",
+        "balance": "Bakiye",
+        "contact": "İletişim",
+        "email":"E-posta",
+        "mobile_phone":"Telefon",
+        "country_city":"Şehir",
+        "address":"Adres",
+        "see_location":"Konumu Gör",
+        "updated_at": "Son Güncellenme Tarihi"
     }
 }
