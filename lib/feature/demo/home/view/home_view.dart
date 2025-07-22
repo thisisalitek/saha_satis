@@ -13,7 +13,6 @@ import '../../../../product/init/language/product_localization.dart';
 import 'mixin/home_view_mixin.dart';
 
 part 'widget/home_app_bar.dart';
-part 'widget/user_list.dart';
 
 @RoutePage()
 class HomeView extends StatefulWidget {
@@ -74,7 +73,22 @@ class _HomeViewState extends BaseState<HomeView> with HomeViewMixin {
                   ),
                 ],
               ),
-              Expanded(child: _UserList()),
+              Text(
+                'Geliştirici',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+              Assets.images.imgFlags.image(package: 'gen', height: 100),
+
+              Assets.lottie.animZombie.lottie(package: 'gen', height: 300),
+
+              Text('Hakan Özsöyler', style: Theme.of(context).textTheme.headlineMedium, textAlign: TextAlign.center),
+              const SizedBox(height: 16),
+              Text(
+                'Bu uygulama,Hakan Özsöyler tarafından geliştirilmiştir.\nMail:  ozsoylerhakan@gmail.com\nTelefon:  05445814052',
+                style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),
