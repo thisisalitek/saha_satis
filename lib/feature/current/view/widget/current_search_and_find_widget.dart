@@ -2,7 +2,6 @@ import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:dinamik10_pos/feature/current/view_model/current_state.dart';
 import 'package:dinamik10_pos/feature/current/view_model/current_view_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kartal/kartal.dart';
 import 'package:widgets/widgets.dart';
