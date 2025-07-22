@@ -52,6 +52,10 @@ abstract class  LocaleKeys {
   static const general_dialog_yes = 'general.dialog.yes';
   static const general_dialog_no = 'general.dialog.no';
   static const general_dialog_copy = 'general.dialog.copy';
+  static const general_dialog_not_found = 'general.dialog.not_found';
+  static const general_dialog_unauthorized = 'general.dialog.unauthorized';
+  static const general_dialog_connection_ok = 'general.dialog.connection_ok';
+  static const general_dialog_connection_error = 'general.dialog.connection_error';
   static const general_dialog = 'general.dialog';
   static const general = 'general';
   static const layout_noPermission = 'layout.noPermission';

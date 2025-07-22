@@ -57,7 +57,11 @@
             },
             "yes": "Yes",
             "no": "No",
-            "copy": "Text copied"
+            "copy": "Text copied",
+            "not_found": "You do not have an internet connection!",
+            "unauthorized": "Unauthorized operation, please login again or contact with the authority",
+            "connection_ok": "You can access the online modules of your application smoothly and transfer your offline data.",
+            "connection_error": "Could not establish a connection to access online modules and send your saved data.\nPlease note:\nIf you see this warning, it means there's an issue with your internet connection.\nWhat should you do?\nPlease check your internet connection and try again. Otherwise, you won't be able to access online features or synchronize your offline data."
         }
     },
     "layout": {

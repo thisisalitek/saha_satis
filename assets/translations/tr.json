@@ -57,7 +57,11 @@
             },
             "yes": "Evet",
             "no": "Hayır",
-            "copy": "Metin kopyalandı"
+            "copy": "Metin kopyalandı",
+            "not_found":"İnternet bağlantınız bulunmamakta !",
+            "unauthorized":"Yetkisiz islem, lütfen tekrar giris yapiniz veya yetkili ile iletisime geciniz",
+            "connection_ok": "Uygulamanızın online modüllerine sorunsuz erişebilir ve offline verilerinizi aktarabilirsiniz.",
+            "connection_error": "Çevrimiçi modüllere erişim ve kaydedilen verilerinizi göndermek için bağlantı kurulamadı.\nLütfen dikkat:\nBu uyarıyı görüyorsanız, internet bağlantınızda bir sorun var demektir.\nNe yapmalısınız?\nLütfen internet bağlantınızı kontrol edip tekrar deneyin.Aksi takdirde, online özelliklere ulaşamayacak ve offline verilerinizi senkronize edemeyeceksiniz."
         }
     },
     "layout": {
@@ -117,11 +121,11 @@
         "nace_code2": "Nace Kodu 2",
         "balance": "Bakiye",
         "contact": "İletişim",
-        "email":"E-posta",
-        "mobile_phone":"Telefon",
-        "country_city":"Şehir",
-        "address":"Adres",
-        "see_location":"Konumu Gör",
+        "email": "E-posta",
+        "mobile_phone": "Telefon",
+        "country_city": "Şehir",
+        "address": "Adres",
+        "see_location": "Konumu Gör",
         "updated_at": "Son Güncellenme Tarihi"
     }
 }
