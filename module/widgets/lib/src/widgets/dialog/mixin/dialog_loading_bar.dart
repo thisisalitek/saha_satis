@@ -10,7 +10,7 @@ class HorizontalLoading extends StatefulWidget {
 
 class _HorizontalLoadingState extends State<HorizontalLoading> with TickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
-    duration: Duration(seconds: widget.offTime),
+    duration: Duration(milliseconds: widget.offTime),
     vsync: this,
   )..forward();
 
