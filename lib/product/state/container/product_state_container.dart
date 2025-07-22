@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import '../../../feature/synchronization/view_model/synchronization_view_model.dart';
 import '../../cache/models/app_setting_model.dart';
 import '../../service/interface/sync_get_operation.dart';
-import '../../service/manager/product_service_manager.dart'; // Eğer ProductNetworkManager buradaysa
+import '../../service/manager/product_service_manager.dart';
 import '../../service/sync_get_service.dart';
 import '../view_model/product_view_model.dart';
 
