@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:bootstrap_icons/bootstrap_icons.dart';
+import 'package:dinamik10_pos/product/common/widget/connection_status_icon.dart';
 import 'package:dinamik10_pos/product/router/app_router.dart';
 import 'package:flutter/material.dart';
 import 'package:kartal/kartal.dart';
@@ -51,6 +52,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             )
             : SizedBox(),
+        const ConnectionStatusIcon(),
       ],
       leading:
           isExit == true
