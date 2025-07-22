@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:dinamik10_pos/product/init/language/locale_keys.g.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:widgets/widgets.dart';
 
@@ -10,18 +12,22 @@ final class ProductNetworkErrorManager {
 
   void handleError(int value) {
     if (value == HttpStatus.unauthorized) {
-      customShowDialogGeneric(
-        context,
-        alertEnum: AlertEnum.error,
-        subTitle: 'Yetkisiz islem, lütfen tekrar giris yapiniz veya yetkili ile iletisime geciniz',
-      );
+      if (context.mounted) {
+        customShowDialogGeneric(
+          context,
+          alertEnum: AlertEnum.error,
+          subTitle: LocaleKeys.general_dialog_unauthorized.tr(),
+        );
+      }
     }
     if (value == HttpStatus.notFound) {
-      customShowDialogGeneric(
-        context,
-        alertEnum: AlertEnum.error,
-        subTitle: 'Lutfen internet baglantinizi kontrol edin',
-      );
+      if (context.mounted) {
+        customShowDialogGeneric(
+          context,
+          alertEnum: AlertEnum.error,
+          subTitle: LocaleKeys.general_dialog_not_found.tr(),
+        );
+      }
     }
   }
 }
