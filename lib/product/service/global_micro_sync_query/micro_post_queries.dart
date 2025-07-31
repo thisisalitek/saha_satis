@@ -63,17 +63,164 @@ class GlobalMicroPostQuery {
     }
   }
 
-  static String postIrsaliye(MainAppType mainApp, Fis fis) {
-    var sthFields16 = """""";
-    var sthValues16 = """""";
-    var sthFields17 =
-        """, sth_MainProgramNo, sth_VersionNo, sth_MenuNo, sth_MikroSpecial1, sth_MikroSpecial2, sth_MikroSpecial3, 
-      sth_ExternalProgramType, sth_ExternalProgramId, sth_Hash
+  static String postFatura(MainAppType mainApp, Fis fis) {
+    var sthFields17 = "";
+    var sthValues17 = "";
+    var chaFields16 = "";
+    var chaValues16 = "";
+    var chaFields17 = "";
+    var chaValues17 = "";
+
+    if (mainApp == MainAppType.mikro17) {
+      chaFields17 =
+          """, cha_MainProgramNo, cha_VersionNo, cha_MenuNo, cha_MikroSpecial1, cha_MikroSpecial2, cha_MikroSpecial3, cha_ExternalProgramType, cha_ExternalProgramId, cha_Hash
+        , cha_efatura_belge_tipi
+        , cha_vergi11, cha_vergi12, cha_vergi13, cha_vergi14, cha_vergi15, cha_vergi16, cha_vergi17, cha_vergi18, cha_vergi19, cha_vergi20
+        , cha_ilave_edilecek_kdv11, cha_ilave_edilecek_kdv12, cha_ilave_edilecek_kdv13, cha_ilave_edilecek_kdv14, cha_ilave_edilecek_kdv15
+        , cha_ilave_edilecek_kdv16, cha_ilave_edilecek_kdv17, cha_ilave_edilecek_kdv18, cha_ilave_edilecek_kdv19, cha_ilave_edilecek_kdv20
+        , cha_tevkifat_sifirlandi_fl, cha_bsba_e_belge_mi, cha_eticaret_kanal_kodu, cha_hizli_satis_kasa_no, cha_ebelge_Islemturu""";
+      chaValues17 =
+          """, 21 /*cha_MainProgramNo*/, @MikroVersionNo /*cha_VersionNo*/, 61270 /*cha_MenuNo*/, '' /*cha_MikroSpecial1*/, '' /*cha_MikroSpecial2*/, '' /*cha_MikroSpecial3*/, 
+          0 /*cha_ExternalProgramType*/, '' /*cha_ExternalProgramId*/, 0 /*cha_Hash*/ 
+          , 0 /*cha_efatura_belge_tipi*/ , @Vergi11 /*cha_vergi11*/, @Vergi12 /*cha_vergi12*/, @Vergi13 /*cha_vergi13*/, @Vergi14 /*cha_vergi14*/, @Vergi15 /*cha_vergi15*/
+          , @Vergi16 /*cha_vergi16*/, @Vergi17 /*cha_vergi17*/, @Vergi18 /*cha_vergi18*/, @Vergi19 /*cha_vergi19*/, @Vergi20 /*cha_vergi20*/, 0 /*cha_ilave_edilecek_kdv11*/
+          , 0 /*cha_ilave_edilecek_kdv12*/, 0 /*cha_ilave_edilecek_kdv13*/, 0 /*cha_ilave_edilecek_kdv14*/, 0 /*cha_ilave_edilecek_kdv15*/
+          , 0 /*cha_ilave_edilecek_kdv16*/, 0 /*cha_ilave_edilecek_kdv17*/, 0 /*cha_ilave_edilecek_kdv18*/, 0 /*cha_ilave_edilecek_kdv19*/
+          , 0 /*cha_ilave_edilecek_kdv20*/, 0 /*cha_tevkifat_sifirlandi_fl*/, 0 /*cha_bsba_e_belge_mi*/, '' /*cha_eticaret_kanal_kodu*/
+          , 0 /*cha_hizli_satis_kasa_no*/, 0 /*cha_ebelge_Islemturu*/""";
+
+      sthFields17 =
+          """, sth_MainProgramNo, sth_VersionNo, sth_MenuNo, sth_MikroSpecial1, sth_MikroSpecial2, sth_MikroSpecial3, 
+      sth_ExternalProgramType, sth_ExternalProgramId, sth_Hash, sth_eticaret_kanal_kodu, sth_bagli_ithalat_kodu, sth_tevkifat_sifirlandi_fl
       """;
-    var sthValues17 =
-        """, 1 /*sth_MainProgramNo*/, @ /*sth_VersionNo*/, '360231' /*sth_MenuNo*/, '' /*sth_MikroSpecial1*/, '' /*sth_MikroSpecial2*/, '' /*sth_MikroSpecial3*/, 
+      sthValues17 =
+          """, 1 /*sth_MainProgramNo*/, @ /*sth_VersionNo*/, '360231' /*sth_MenuNo*/, '' /*sth_MikroSpecial1*/, '' /*sth_MikroSpecial2*/, '' /*sth_MikroSpecial3*/, 
       0 /*sth_ExternalProgramType*/, '' /*sth_ExternalProgramId*/, 0 /*sth_Hash*/
       """;
+    } else if (mainApp == MainAppType.mikro16) {
+      chaFields16 = """, cha_disyazilimid  """;
+      chaValues16 = """, '' /*cha_disyazilimid*/""";
+    }
+    List<double> vergiler = [];
+    List<double> vergiMatrahlari = [];
+    for (var i = 0; i <= 20; i++) {
+      vergiler.add(0);
+      vergiMatrahlari.add(0);
+    }
+
+    var q =
+        """
+        DECLARE @EvrakSeri VARCHAR(4)='${fis.evrakSeri}';
+        DECLARE @EvrakSira INT=0;
+        DECLARE @SatirNo INT=0;
+        DECLARE @MikroUserNo INT=99;
+        DECLARE @MikroVersionNo VARCHAR(20)="";
+        DECLARE @FIRMANO INT=0;
+        DECLARE @SUBENO INT=0;
+        DECLARE @STH_CINS INT=${fis.cins};
+        DECLARE @STH_TIP INT=${fis.tip};
+        DECLARE @STH_EVRAKTIP INT=${fis.evrakTip};
+        DECLARE @STH_NORMAL_IADE INT=${fis.normalIade};
+
+        DECLARE @CariSorMerkez VARCHAR(25)='${fis.sorMerkez}';
+        DECLARE @StokSorMerkez VARCHAR(25)='${fis.sorMerkez}';
+
+        DECLARE @VergiPntr INT = 0;
+        DECLARE @VergiYuzde FLOAT = 0;
+        DECLARE @VergiMatrah0 FLOAT=0,@VergiMatrah1 FLOAT=0, @VergiMatrah2 FLOAT=0, @VergiMatrah3 FLOAT=0, @VergiMatrah4 FLOAT=0;
+        DECLARE @VergiMatrah5 FLOAT=0, @VergiMatrah6 FLOAT=0, @VergiMatrah7 FLOAT=0, @VergiMatrah8 FLOAT=0, @VergiMatrah9 FLOAT=0;
+        DECLARE @VergiMatrah10 FLOAT=0, @VergiMatrah11 FLOAT=0, @VergiMatrah12 FLOAT=0;
+
+        DECLARE @Vergi0 FLOAT=0, @Vergi1 FLOAT=0, @Vergi2 FLOAT=0, @Vergi3 FLOAT=0, @Vergi4 FLOAT=0, @Vergi5 FLOAT=0, @Vergi6 FLOAT=0; 
+        DECLARE @Vergi7 FLOAT=0, @Vergi8 FLOAT=0, @Vergi9 FLOAT=0, @Vergi10 FLOAT=0, @Vergi11 FLOAT=0, @Vergi12 FLOAT=0; 
+
+        SELECT @EvrakSira=ISNULL(MAX(sth_evrakno_sira),0)+1 FROM STOK_HAREKETLERI WHERE sth_evraktip=@STH_EVRAKTIP AND sth_evrakno_seri=@EvrakSeri;
+       
+        """;
+    if (mainApp == MainAppType.mikro17) {
+      q += """ 
+        IF EXISTS(SELECT TOP 1 * FROM DEPOLAR) BEGIN
+          SELECT TOP 1 @=dep_VersionNo FROM DEPOLAR ORDER BY dep_no DESC
+        END
+      """;
+    }
+
+    q += """
+          
+    """;
+    for (var line in fis.lines) {
+      q +=
+          """ 
+      INSERT INTO STOK_HAREKETLERI (sth_Guid, sth_DBCno, sth_SpecRECno, sth_iptal, sth_fileid, sth_hidden, sth_kilitli, sth_degisti, sth_checksum, sth_create_user,
+        sth_create_date, sth_lastup_user, sth_lastup_date, sth_special1, sth_special2, sth_special3, sth_firmano, sth_subeno, sth_tarih, sth_tip, sth_cins,
+        sth_normal_iade, sth_evraktip, sth_evrakno_seri, sth_evrakno_sira, sth_satirno, sth_belge_no, sth_belge_tarih, sth_stok_kod, 
+        sth_isk_mas1, sth_isk_mas2, sth_isk_mas3, sth_isk_mas4, sth_isk_mas5, sth_isk_mas6, sth_isk_mas7, sth_isk_mas8, sth_isk_mas9, 
+        sth_isk_mas10, sth_sat_iskmas1, sth_sat_iskmas2, sth_sat_iskmas3, sth_sat_iskmas4, sth_sat_iskmas5, sth_sat_iskmas6, sth_sat_iskmas7, 
+        sth_sat_iskmas8, sth_sat_iskmas9, sth_sat_iskmas10, sth_pos_satis, sth_promosyon_fl, sth_cari_cinsi, sth_cari_kodu, sth_cari_grup_no, 
+        sth_isemri_gider_kodu, sth_plasiyer_kodu, sth_har_doviz_cinsi, sth_har_doviz_kuru, sth_alt_doviz_kuru, sth_stok_doviz_cinsi, 
+        sth_stok_doviz_kuru, sth_miktar, sth_miktar2, sth_birim_pntr, sth_tutar, sth_iskonto1, sth_iskonto2, sth_iskonto3, sth_iskonto4, 
+        sth_iskonto5, sth_iskonto6, sth_masraf1, sth_masraf2, sth_masraf3, sth_masraf4, sth_vergi_pntr, sth_vergi, sth_masraf_vergi_pntr, 
+        sth_masraf_vergi, sth_netagirlik, sth_odeme_op, sth_aciklama, sth_sip_uid, sth_fat_uid, sth_giris_depo_no, sth_cikis_depo_no, 
+        sth_malkbl_sevk_tarihi, sth_cari_srm_merkezi, sth_stok_srm_merkezi, sth_fis_tarihi, sth_fis_sirano, sth_vergisiz_fl, 
+        sth_maliyet_ana, sth_maliyet_alternatif, sth_maliyet_orjinal, sth_adres_no, sth_parti_kodu, sth_lot_no, sth_kons_uid, sth_proje_kodu, 
+        sth_exim_kodu, sth_otv_pntr, sth_otv_vergi, sth_brutagirlik, sth_disticaret_turu, sth_otvtutari, sth_otvvergisiz_fl, sth_oiv_pntr, 
+        sth_oiv_vergi, sth_oivvergisiz_fl, sth_fiyat_liste_no, sth_oivtutari, sth_Tevkifat_turu, sth_nakliyedeposu, sth_nakliyedurumu, 
+        sth_yetkili_uid, sth_taxfree_fl, sth_ilave_edilecek_kdv, sth_ismerkezi_kodu, sth_HareketGrupKodu1, sth_HareketGrupKodu2, 
+        sth_HareketGrupKodu3, sth_Olcu1, sth_Olcu2, sth_Olcu3, sth_Olcu4, sth_Olcu5, sth_FormulMiktarNo, sth_FormulMiktar, sth_eirs_senaryo, 
+        sth_eirs_tipi, sth_teslim_tarihi, sth_matbu_fl, sth_satis_fiyat_doviz_cinsi, sth_satis_fiyat_doviz_kuru
+        $sthFields17)
+      VALUES(NEWID() /*sth_Guid*/, 0 /*sth_DBCno*/, 0 /*sth_SpecRECno*/, 0 /*sth_iptal*/, 16 /*sth_fileid*/, 0 /*sth_hidden*/, 0 /*sth_kilitli*/, 
+        0 /*sth_degisti*/, 0 /*sth_checksum*/, @MikroUserNo /*sth_create_user*/, GETDATE() /*sth_create_date*/, @MikroUserNo /*sth_lastup_user*/, 
+        GETDATE() /*sth_lastup_date*/, '' /*sth_special1*/, '' /*sth_special2*/, '' /*sth_special3*/, @FIRMANO /*sth_firmano*/,  @SUBENO /*sth_subeno*/, 
+        '${fis.tarih}' /*sth_tarih*/, @STH_TIP /*sth_tip*/, @STH_CINS /*sth_cins*/,  @STH_NORMAL_IADE /*sth_normal_iade*/, @STH_EVRAKTIP /*sth_evraktip*/, 
+        @EvrakSeri /*sth_evrakno_seri*/, @evrakSira /*sth_evrakno_sira*/, @SatirNo /*sth_satirno*/, '${fis.belgeNo}' /*sth_belge_no*/, 
+        '${fis.belgeTarihi}' /*sth_belge_tarih*/, '${line.stokKod}' /*sth_stok_kod*/, 
+        0 /*sth_isk_mas1*/, 1 /*sth_isk_mas2*/, 1 /*sth_isk_mas3*/, 1 /*sth_isk_mas4*/, 1 /*sth_isk_mas5*/, 1 /*sth_isk_mas6*/, 1 /*sth_isk_mas7*/, 
+        1 /*sth_isk_mas8*/, 1 /*sth_isk_mas9*/, 1 /*sth_isk_mas10*/, 0 /*sth_sat_iskmas1*/, 0 /*sth_sat_iskmas2*/, 0 /*sth_sat_iskmas3*/, 
+        0 /*sth_sat_iskmas4*/, 0 /*sth_sat_iskmas5*/, 0 /*sth_sat_iskmas6*/, 0 /*sth_sat_iskmas7*/, 0 /*sth_sat_iskmas8*/, 0 /*sth_sat_iskmas9*/, 
+        0 /*sth_sat_iskmas10*/, 0 /*sth_pos_satis*/, 0 /*sth_promosyon_fl*/, 0 /*sth_cari_cinsi*/, '${fis.cariKod}' /*sth_cari_kodu*/, 
+        0 /*sth_cari_grup_no*/, '' /*sth_isemri_gider_kodu*/, '${fis.saticiKod}' /*sth_plasiyer_kodu*/, 0 /*sth_har_doviz_cinsi*/, 1 /*sth_har_doviz_kuru*/, 
+        1 /*sth_alt_doviz_kuru*/, 0 /*sth_stok_doviz_cinsi*/, 1 /*sth_stok_doviz_kuru*/, ${line.miktar} /*sth_miktar*/, ${line.miktar2} /*sth_miktar2*/, 
+        ${line.birimPntr} /*sth_birim_pntr*/, ${line.tutar} /*sth_tutar*/, ${line.iskTut1} /*sth_iskonto1*/, ${line.iskTut2} /*sth_iskonto2*/, 
+        ${line.iskTut3} /*sth_iskonto3*/, ${line.iskTut4} /*sth_iskonto4*/,  ${line.iskTut5} /*sth_iskonto5*/,  ${line.iskTut6} /*sth_iskonto6*/, 
+        0 /*sth_masraf1*/, 0 /*sth_masraf2*/, 0 /*sth_masraf3*/, 0 /*sth_masraf4*/, ${line.vergiPntr} /*sth_vergi_pntr*/, ${line.vergi} /*sth_vergi*/, 
+        0 /*sth_masraf_vergi_pntr*/, 0 /*sth_masraf_vergi*/, 0 /*sth_netagirlik*/, ${fis.odemePlanNo} /*sth_odeme_op*/, 
+        '${line.aciklama.replaceAll("'", "''").substring(0, 50)}' /*sth_aciklama*/, '${line.sipGuid}' /*sth_sip_uid*/, 
+        '00000000-0000-0000-0000-000000000000' /*sth_fat_uid*/, ${fis.depo1} /*sth_giris_depo_no*/, ${fis.depo1} /*sth_cikis_depo_no*/, 
+        '${fis.tarih}' /*sth_malkbl_sevk_tarihi*/, @CariSorMerkez /*sth_cari_srm_merkezi*/, @StokSorMerkez /*sth_stok_srm_merkezi*/, 
+        '1899-12-30 00:00:00.000' /*sth_fis_tarihi*/, 0 /*sth_fis_sirano*/, 0 /*sth_vergisiz_fl*/, 0 /*sth_maliyet_ana*/, 0 /*sth_maliyet_alternatif*/, 
+        0 /*sth_maliyet_orjinal*/, ${fis.cariAdresNo} /*sth_adres_no*/, '${line.partiKodu}' /*sth_parti_kodu*/, ${line.lotNo} /*sth_lot_no*/, 
+        '00000000-0000-0000-0000-000000000000' /*sth_kons_uid*/, '${fis.projeKodu}' /*sth_proje_kodu*/, '' /*sth_exim_kodu*/, 0 /*sth_otv_pntr*/, 
+        0 /*sth_otv_vergi*/, 0 /*sth_brutagirlik*/, '' /*sth_disticaret_turu*/, 0 /*sth_otvtutari*/, 0 /*sth_otvvergisiz_fl*/, 0 /*sth_oiv_pntr*/, 
+        0 /*sth_oiv_vergi*/, 0 /*sth_oivvergisiz_fl*/, ${line.fiyatListeNo} /*sth_fiyat_liste_no*/, 0 /*sth_oivtutari*/, 0 /*sth_Tevkifat_turu*/, 
+        0 /*sth_nakliyedeposu*/, 0 /*sth_nakliyedurumu*/, '00000000-0000-0000-0000-000000000000' /*sth_yetkili_uid*/, 0 /*sth_taxfree_fl*/, 
+        0 /*sth_ilave_edilecek_kdv*/, '' /*sth_ismerkezi_kodu*/, '' /*sth_HareketGrupKodu1*/, '' /*sth_HareketGrupKodu2*/, 
+        '' /*sth_HareketGrupKodu3*/, 0 /*sth_Olcu1*/, 0 /*sth_Olcu2*/, 0 /*sth_Olcu3*/, 0 /*sth_Olcu4*/, 0 /*sth_Olcu5*/, 0 /*sth_FormulMiktarNo*/, 
+        0 /*sth_FormulMiktar*/, 0 /*sth_eirs_senaryo*/, 0 /*sth_eirs_tipi*/, '1899-12-30 00:00:00.000' /*sth_teslim_tarihi*/, 0 /*sth_matbu_fl*/, 
+        0 /*sth_satis_fiyat_doviz_cinsi*/, 1 /*sth_satis_fiyat_doviz_kuru*/
+        $sthValues17);
+
+      SET @SatirNo=@SatirNo+1;
+      """;
+    }
+
+    return q;
+  }
+
+  static String postIrsaliye(MainAppType mainApp, Fis fis) {
+    var sthFields17 = "";
+    var sthValues17 = "";
+
+    if (mainApp == MainAppType.mikro17) {
+      sthFields17 =
+          """, sth_MainProgramNo, sth_VersionNo, sth_MenuNo, sth_MikroSpecial1, sth_MikroSpecial2, sth_MikroSpecial3, 
+      sth_ExternalProgramType, sth_ExternalProgramId, sth_Hash, sth_eticaret_kanal_kodu, sth_bagli_ithalat_kodu, sth_tevkifat_sifirlandi_fl
+      """;
+      sthValues17 =
+          """, 1 /*sth_MainProgramNo*/, @ /*sth_VersionNo*/, '360231' /*sth_MenuNo*/, '' /*sth_MikroSpecial1*/, '' /*sth_MikroSpecial2*/, '' /*sth_MikroSpecial3*/, 
+      0 /*sth_ExternalProgramType*/, '' /*sth_ExternalProgramId*/, 0 /*sth_Hash*/
+      """;
+    }
     var q =
         """
         DECLARE @EvrakSeri VARCHAR(4)='${fis.evrakSeri}';
@@ -119,9 +266,8 @@ class GlobalMicroPostQuery {
         sth_oiv_vergi, sth_oivvergisiz_fl, sth_fiyat_liste_no, sth_oivtutari, sth_Tevkifat_turu, sth_nakliyedeposu, sth_nakliyedurumu, 
         sth_yetkili_uid, sth_taxfree_fl, sth_ilave_edilecek_kdv, sth_ismerkezi_kodu, sth_HareketGrupKodu1, sth_HareketGrupKodu2, 
         sth_HareketGrupKodu3, sth_Olcu1, sth_Olcu2, sth_Olcu3, sth_Olcu4, sth_Olcu5, sth_FormulMiktarNo, sth_FormulMiktar, sth_eirs_senaryo, 
-        sth_eirs_tipi, sth_teslim_tarihi, sth_matbu_fl, sth_satis_fiyat_doviz_cinsi, sth_satis_fiyat_doviz_kuru, sth_eticaret_kanal_kodu, 
-        sth_bagli_ithalat_kodu, sth_tevkifat_sifirlandi_fl
-        $sthFields16 $sthFields17)
+        sth_eirs_tipi, sth_teslim_tarihi, sth_matbu_fl, sth_satis_fiyat_doviz_cinsi, sth_satis_fiyat_doviz_kuru
+        $sthFields17)
       VALUES(NEWID() /*sth_Guid*/, 0 /*sth_DBCno*/, 0 /*sth_SpecRECno*/, 0 /*sth_iptal*/, 16 /*sth_fileid*/, 0 /*sth_hidden*/, 0 /*sth_kilitli*/, 
         0 /*sth_degisti*/, 0 /*sth_checksum*/, @MikroUserNo /*sth_create_user*/, GETDATE() /*sth_create_date*/, @MikroUserNo /*sth_lastup_user*/, 
         GETDATE() /*sth_lastup_date*/, '' /*sth_special1*/, '' /*sth_special2*/, '' /*sth_special3*/, @FIRMANO /*sth_firmano*/,  @SUBENO /*sth_subeno*/, 
@@ -150,9 +296,8 @@ class GlobalMicroPostQuery {
         0 /*sth_ilave_edilecek_kdv*/, '' /*sth_ismerkezi_kodu*/, '' /*sth_HareketGrupKodu1*/, '' /*sth_HareketGrupKodu2*/, 
         '' /*sth_HareketGrupKodu3*/, 0 /*sth_Olcu1*/, 0 /*sth_Olcu2*/, 0 /*sth_Olcu3*/, 0 /*sth_Olcu4*/, 0 /*sth_Olcu5*/, 0 /*sth_FormulMiktarNo*/, 
         0 /*sth_FormulMiktar*/, 0 /*sth_eirs_senaryo*/, 0 /*sth_eirs_tipi*/, '1899-12-30 00:00:00.000' /*sth_teslim_tarihi*/, 0 /*sth_matbu_fl*/, 
-        0 /*sth_satis_fiyat_doviz_cinsi*/, 1 /*sth_satis_fiyat_doviz_kuru*/, '' /*sth_eticaret_kanal_kodu*/, 
-        '' /*sth_bagli_ithalat_kodu*/, 0 /*sth_tevkifat_sifirlandi_fl*/
-        $sthValues16 $sthValues17);
+        0 /*sth_satis_fiyat_doviz_cinsi*/, 1 /*sth_satis_fiyat_doviz_kuru*/
+        $sthValues17);
 
       SET @SatirNo=@SatirNo+1;
       """;
@@ -162,16 +307,21 @@ class GlobalMicroPostQuery {
   }
 
   static String postSiparis(MainAppType mainApp, Fis fis) {
-    var sipFields16 = """""";
-    var sipValues16 = """""";
-    var sipFields17 =
-        """, sip_MainProgramNo, sip_VersionNo, sip_MenuNo, sip_MikroSpecial1, sip_MikroSpecial2, sip_MikroSpecial3, 
-      sip_ExternalProgramType, sip_ExternalProgramId, sip_Hash, sip_miktar2, sip_avans_tutari
-      """;
-    var sipValues17 =
-        """, 1 /*sip_MainProgramNo*/, @ /*sip_VersionNo*/, '22200' /*sip_MenuNo*/, '' /*sip_MikroSpecial1*/, '' /*sip_MikroSpecial2*/, '' /*sip_MikroSpecial3*/, 
+    var sipFields16 = "";
+    var sipValues16 = "";
+    var sipFields17 = "";
+    var sipValues17 = "";
+
+    if (mainApp == MainAppType.mikro17) {
+      sipFields17 =
+          """, sip_MainProgramNo, sip_VersionNo, sip_MenuNo, sip_MikroSpecial1, sip_MikroSpecial2, sip_MikroSpecial3, 
+          sip_ExternalProgramType, sip_ExternalProgramId, sip_Hash, sip_miktar2, sip_avans_tutari
+          """;
+      sipValues17 =
+          """, 1 /*sip_MainProgramNo*/, @ /*sip_VersionNo*/, '22200' /*sip_MenuNo*/, '' /*sip_MikroSpecial1*/, '' /*sip_MikroSpecial2*/, '' /*sip_MikroSpecial3*/, 
       0 /*sip_ExternalProgramType*/, '' /*sip_ExternalProgramId*/, 0 /*sip_Hash*/, 0 /*sip_miktar2*/, 0 /*sip_avans_tutari*/
       """;
+    }
     var q =
         """
         DECLARE @EvrakSeri VARCHAR(4)='${fis.evrakSeri}';
