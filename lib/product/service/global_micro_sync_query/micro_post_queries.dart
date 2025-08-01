@@ -45,7 +45,6 @@ class FisLine {
   double iskTut6 = 0;
   int vergiPntr = 0;
   int fiyatListeNo = 1;
-
   double vergi = 0;
   String sipGuid = "00000000-0000-0000-0000-000000000000";
 }
@@ -101,13 +100,35 @@ class GlobalMicroPostQuery {
       chaFields16 = """, cha_disyazilimid  """;
       chaValues16 = """, '' /*cha_disyazilimid*/""";
     }
-    List<double> vergiler = [];
-    List<double> vergiMatrahlari = [];
-    for (var i = 0; i <= 20; i++) {
-      vergiler.add(0);
-      vergiMatrahlari.add(0);
-    }
 
+    int sthEvrakTip = 0;
+    int sthCins = 0;
+    switch (fis.evrakTip) {
+      case 0: // alis faturasi
+        sthEvrakTip = 3;
+        break;
+      case 63: // satis faturasi
+        sthEvrakTip = 4;
+        break;
+      default:
+        return "";
+    }
+    switch (fis.cins) {
+      case 6: // toptan fatura
+        sthCins = 0;
+        break;
+      case 7: // perakende fatura
+        sthCins = 1;
+        break;
+      case 12: // fason faturasi
+        sthCins = 8;
+        break;
+      case 13: // dis ticaret faturasi
+        sthCins = 12;
+        break;
+      default:
+        return "";
+    }
     var q =
         """
         DECLARE @EvrakSeri VARCHAR(4)='${fis.evrakSeri}';
@@ -117,25 +138,24 @@ class GlobalMicroPostQuery {
         DECLARE @MikroVersionNo VARCHAR(20)="";
         DECLARE @FIRMANO INT=0;
         DECLARE @SUBENO INT=0;
-        DECLARE @STH_CINS INT=${fis.cins};
-        DECLARE @STH_TIP INT=${fis.tip};
-        DECLARE @STH_EVRAKTIP INT=${fis.evrakTip};
+        DECLARE @CHA_GUID UNIQUEIDENTIFIER;
+        DECLARE @CHA_TIP INT = ${fis.tip};
+        DECLARE @CHA_CINS INT = 7;
+        DECLARE @CHA_IADE INT = ${fis.normalIade};
+        DECLARE @CHA_EVRAKTIP INT = ${fis.evrakTip};
+        DECLARE @CHA_TPOZ INT = 1;
+        DECLARE @CHA_TICARET_TURU INT = ${fis.tip == 1 ? 0 : 1};
+        DECLARE @CHA_CARI_CINS INT = 4;
+
+        DECLARE @STH_CINS INT=$sthCins;
+        DECLARE @STH_TIP INT=${fis.tip == 0 ? 1 : 0};
+        DECLARE @STH_EVRAKTIP INT=$sthEvrakTip;
         DECLARE @STH_NORMAL_IADE INT=${fis.normalIade};
 
         DECLARE @CariSorMerkez VARCHAR(25)='${fis.sorMerkez}';
         DECLARE @StokSorMerkez VARCHAR(25)='${fis.sorMerkez}';
-
-        DECLARE @VergiPntr INT = 0;
-        DECLARE @VergiYuzde FLOAT = 0;
-        DECLARE @VergiMatrah0 FLOAT=0,@VergiMatrah1 FLOAT=0, @VergiMatrah2 FLOAT=0, @VergiMatrah3 FLOAT=0, @VergiMatrah4 FLOAT=0;
-        DECLARE @VergiMatrah5 FLOAT=0, @VergiMatrah6 FLOAT=0, @VergiMatrah7 FLOAT=0, @VergiMatrah8 FLOAT=0, @VergiMatrah9 FLOAT=0;
-        DECLARE @VergiMatrah10 FLOAT=0, @VergiMatrah11 FLOAT=0, @VergiMatrah12 FLOAT=0;
-
-        DECLARE @Vergi0 FLOAT=0, @Vergi1 FLOAT=0, @Vergi2 FLOAT=0, @Vergi3 FLOAT=0, @Vergi4 FLOAT=0, @Vergi5 FLOAT=0, @Vergi6 FLOAT=0; 
-        DECLARE @Vergi7 FLOAT=0, @Vergi8 FLOAT=0, @Vergi9 FLOAT=0, @Vergi10 FLOAT=0, @Vergi11 FLOAT=0, @Vergi12 FLOAT=0; 
-
-        SELECT @EvrakSira=ISNULL(MAX(sth_evrakno_sira),0)+1 FROM STOK_HAREKETLERI WHERE sth_evraktip=@STH_EVRAKTIP AND sth_evrakno_seri=@EvrakSeri;
        
+        SET @CHA_GUID=NEWID();
         """;
     if (mainApp == MainAppType.mikro17) {
       q += """ 
@@ -145,8 +165,90 @@ class GlobalMicroPostQuery {
       """;
     }
 
-    q += """
-          
+    List<double> vergiler = [];
+    double satisToplam = 0;
+    double vergiToplam = 0;
+    double iskToplam1 = 0;
+    double iskToplam2 = 0;
+    double iskToplam3 = 0;
+    double iskToplam4 = 0;
+    double iskToplam5 = 0;
+    double iskToplam6 = 0;
+    // List<double> vergiMatrahlari = [];
+    for (var i = 0; i <= 20; i++) {
+      vergiler.add(0);
+      // vergiMatrahlari.add(0);
+    }
+    for (var line in fis.lines) {
+      if (line.vergiPntr >= 0 && line.vergiPntr <= 20) {
+        vergiler[line.vergiPntr] += line.vergi;
+      }
+      satisToplam +=
+          line.tutar -
+          line.iskTut1 -
+          line.iskTut2 -
+          line.iskTut3 -
+          line.iskTut4 -
+          line.iskTut5 -
+          line.iskTut6 +
+          line.vergi;
+      vergiToplam += line.vergi;
+      iskToplam1 += line.iskTut1;
+      iskToplam2 += line.iskTut2;
+      iskToplam3 += line.iskTut3;
+      iskToplam4 += line.iskTut4;
+      iskToplam5 += line.iskTut5;
+      iskToplam6 += line.iskTut6;
+    }
+
+    // --- CARI_HAREKETLER ///
+    q +=
+        """
+        SELECT @EvrakSira=ISNULL(MAX(cha_evrakno_sira),0) + 1 FROM CARI_HESAP_HAREKETLERI WITH(NOLOCK)  WHERE cha_evrakno_seri=@EvrakSeri AND cha_evrak_tip=@CHA_EVRAKTIP;
+
+        INSERT INTO CARI_HESAP_HAREKETLERI (cha_Guid, cha_DBCno, cha_SpecRecNo, cha_iptal, cha_fileid, cha_hidden, cha_kilitli, cha_degisti, cha_CheckSum, cha_create_user, 
+            cha_create_date, cha_lastup_user, cha_lastup_date, cha_special1, cha_special2, cha_special3, cha_firmano, cha_subeno, cha_evrak_tip, cha_evrakno_seri, cha_evrakno_sira, 
+            cha_satir_no, cha_tarihi, cha_tip, cha_cinsi, cha_normal_Iade, cha_tpoz, cha_ticaret_turu, cha_belge_no, cha_belge_tarih, cha_aciklama, cha_satici_kodu, cha_EXIMkodu, 
+            cha_projekodu, cha_yat_tes_kodu, cha_cari_cins, cha_kod, cha_ciro_cari_kodu, cha_d_cins, cha_d_kur, cha_altd_kur, cha_grupno, cha_srmrkkodu, cha_kasa_hizmet, cha_kasa_hizkod, 
+            cha_karsidcinsi, cha_karsid_kur, cha_karsidgrupno, cha_karsisrmrkkodu, cha_miktari, cha_meblag, cha_aratoplam, cha_vade, cha_Vade_Farki_Yuz, cha_ft_iskonto1, cha_ft_iskonto2, 
+            cha_ft_iskonto3, cha_ft_iskonto4, cha_ft_iskonto5, cha_ft_iskonto6, cha_ft_masraf1, cha_ft_masraf2, cha_ft_masraf3, cha_ft_masraf4, cha_isk_mas1, cha_isk_mas2, cha_isk_mas3, 
+            cha_isk_mas4, cha_isk_mas5, cha_isk_mas6, cha_isk_mas7, cha_isk_mas8, cha_isk_mas9, cha_isk_mas10, cha_sat_iskmas1, cha_sat_iskmas2, cha_sat_iskmas3, cha_sat_iskmas4, 
+            cha_sat_iskmas5, cha_sat_iskmas6, cha_sat_iskmas7, cha_sat_iskmas8, cha_sat_iskmas9, cha_sat_iskmas10, cha_yuvarlama, cha_StFonPntr, cha_stopaj, cha_savsandesfonu, 
+            cha_avansmak_damgapul, cha_vergipntr, cha_vergisiz_fl, cha_otvtutari, cha_otvvergisiz_fl, cha_oiv_pntr, cha_oivtutari, cha_oiv_vergi, cha_oivergisiz_fl, cha_fis_tarih, 
+            cha_fis_sirano, cha_trefno, cha_sntck_poz, cha_reftarihi, cha_istisnakodu, cha_pos_hareketi, cha_meblag_ana_doviz_icin_gecersiz_fl, cha_meblag_alt_doviz_icin_gecersiz_fl, 
+            cha_meblag_orj_doviz_icin_gecersiz_fl, cha_sip_uid, cha_kirahar_uid, cha_vardiya_tarihi, cha_vardiya_no, cha_vardiya_evrak_ti, cha_ebelge_turu, cha_tevkifat_toplam, 
+            cha_e_islem_turu, cha_fatura_belge_turu, cha_diger_belge_adi, cha_uuid, cha_adres_no, cha_vergifon_toplam, cha_ilk_belge_tarihi, cha_ilk_belge_doviz_kuru, cha_HareketGrupKodu1, 
+            cha_HareketGrupKodu2, cha_HareketGrupKodu3, cha_ebelgeno_seri, cha_ebelgeno_sira, cha_hubid, cha_hubglbid, cha_vergi1, cha_vergi2, cha_vergi3, cha_vergi4, cha_vergi5, cha_vergi6, 
+            cha_vergi7, cha_vergi8, cha_vergi9, cha_vergi10, 
+            cha_ilave_edilecek_kdv1, cha_ilave_edilecek_kdv2, cha_ilave_edilecek_kdv3, cha_ilave_edilecek_kdv4, cha_ilave_edilecek_kdv5, cha_ilave_edilecek_kdv6, cha_ilave_edilecek_kdv7, 
+            cha_ilave_edilecek_kdv8, cha_ilave_edilecek_kdv9, cha_ilave_edilecek_kdv10
+            $chaFields17 $chaFields16)
+            VALUES(@CHA_GUID /*cha_Guid*/, 0 /*cha_DBCno*/, 0 /*cha_SpecRecNo*/, 0 /*cha_iptal*/, 51 /*cha_fileid*/, 0 /*cha_hidden*/, 0 /*cha_kilitli*/, 0 /*cha_degisti*/,
+            0 /*cha_CheckSum*/, @MikroUserNo /*cha_create_user*/, GETDATE() /*cha_create_date*/, @MikroUserNo /*cha_lastup_user*/, GETDATE() /*cha_lastup_date*/, 
+            '' /*cha_special1*/, '' /*cha_special2*/, '' /*cha_special3*/, 0 /*cha_firmano*/, 0 /*cha_subeno*/, @CHA_EVRAKTIP /*cha_evrak_tip*/, @EvrakSeri /*cha_evrakno_seri*/,
+            @EvrakSira /*cha_evrakno_sira*/, 0 /*cha_satir_no*/, @Tarih /*cha_tarihi*/, @CHA_TIP /*cha_tip*/, @CHA_CINS /*cha_cinsi*/, @CHA_IADE /*cha_normal_Iade*/,
+            @CHA_TPOZ /*cha_tpoz*/, @CHA_TICARET_TURU /*cha_ticaret_turu*/, @BelgeNo /*cha_belge_no*/, @Tarih /*cha_belge_tarih*/, '' /*cha_aciklama*/, '' /*cha_satici_kodu*/, '' /*cha_EXIMkodu*/, 
+            @ProjeKodu /*cha_projekodu*/, '' /*cha_yat_tes_kodu*/,@CHA_CARI_CINS /*cha_cari_cins*/, @KasaKod /*cha_kod*/, @CariKod /*cha_ciro_cari_kodu*/, 
+        0 /*cha_d_cins*/, 1 /*cha_d_kur*/, 1 /*cha_altd_kur*/, 0 /*cha_grupno*/, @SorumlulukMerkezi /*cha_srmrkkodu*/, 0 /*cha_kasa_hizmet*/, '' /*cha_kasa_hizkod*/, 
+            0 /*cha_karsidcinsi*/, 1 /*cha_karsid_kur*/, 0 /*cha_karsidgrupno*/, '' /*cha_karsisrmrkkodu*/, 0 /*cha_miktari*/, $satisToplam /*cha_meblag*/,
+            ${satisToplam - vergiToplam} /*cha_aratoplam*/, ${fis.odemePlanNo} /*cha_vade*/, 0 /*cha_Vade_Farki_Yuz*/, $iskToplam1 /*cha_ft_iskonto1*/,  $iskToplam2 /*cha_ft_iskonto2*/
+            ,  $iskToplam3 /*cha_ft_iskonto3*/,  $iskToplam4 /*cha_ft_iskonto4*/,
+            $iskToplam5 /*cha_ft_iskonto5*/, $iskToplam6 /*cha_ft_iskonto6*/, 0 /*cha_ft_masraf1*/, 0 /*cha_ft_masraf2*/, 0 /*cha_ft_masraf3*/, 0 /*cha_ft_masraf4*/, 0 /*cha_isk_mas1*/, 1 /*cha_isk_mas2*/,
+            1 /*cha_isk_mas3*/, 1 /*cha_isk_mas4*/, 1 /*cha_isk_mas5*/, 1 /*cha_isk_mas6*/, 1 /*cha_isk_mas7*/, 1 /*cha_isk_mas8*/, 1 /*cha_isk_mas9*/, 1 /*cha_isk_mas10*/, 0 /*cha_sat_iskmas1*/,
+            0 /*cha_sat_iskmas2*/, 0 /*cha_sat_iskmas3*/, 0 /*cha_sat_iskmas4*/, 0 /*cha_sat_iskmas5*/, 0 /*cha_sat_iskmas6*/, 0 /*cha_sat_iskmas7*/, 0 /*cha_sat_iskmas8*/, 0 /*cha_sat_iskmas9*/,
+            0 /*cha_sat_iskmas10*/, 0 /*cha_yuvarlama*/, 0 /*cha_StFonPntr*/, 0 /*cha_stopaj*/, 0 /*cha_savsandesfonu*/, 0 /*cha_avansmak_damgapul*/, 0 /*cha_vergipntr*/, 0 /*cha_vergisiz_fl*/,
+            0 /*cha_otvtutari*/, 0 /*cha_otvvergisiz_fl*/, 0 /*cha_oiv_pntr*/, 0 /*cha_oivtutari*/, 0 /*cha_oiv_vergi*/, 0 /*cha_oivergisiz_fl*/, '1899-12-30 00:00:00.000' /*cha_fis_tarih*/, 
+            0 /*cha_fis_sirano*/, '' /*cha_trefno*/, 0 /*cha_sntck_poz*/, '1899-12-30 00:00:00.000' /*cha_reftarihi*/, 0 /*cha_istisnakodu*/, 0 /*cha_pos_hareketi*/, 
+            0 /*cha_meblag_ana_doviz_icin_gecersiz_fl*/, 0 /*cha_meblag_alt_doviz_icin_gecersiz_fl*/, 0 /*cha_meblag_orj_doviz_icin_gecersiz_fl*/, '00000000-0000-0000-0000-000000000000' /*cha_sip_uid*/,
+            '00000000-0000-0000-0000-000000000000' /*cha_kirahar_uid*/, '1899-12-30 00:00:00.000' /*cha_vardiya_tarihi*/, 0 /*cha_vardiya_no*/, 0 /*cha_vardiya_evrak_ti*/,
+             ${fis.normalIade == 1 ? 1 : 0} /*cha_ebelge_turu*/,
+            0 /*cha_tevkifat_toplam*/, 0 /*cha_e_islem_turu*/, 0 /*cha_fatura_belge_turu*/, '' /*cha_diger_belge_adi*/, NEWID() /*cha_uuid*/, 1 /*cha_adres_no*/, 0 /*cha_vergifon_toplam*/,
+            '1899-12-30 00:00:00.000' /*cha_ilk_belge_tarihi*/, 0 /*cha_ilk_belge_doviz_kuru*/, '' /*cha_HareketGrupKodu1*/, '' /*cha_HareketGrupKodu2*/, '' /*cha_HareketGrupKodu3*/, 
+            '' /*cha_ebelgeno_seri*/, 0 /*cha_ebelgeno_sira*/, '' /*cha_hubid*/, '' /*cha_hubglbid*/, @Vergi1 /*cha_vergi1*/, @Vergi2 /*cha_vergi2*/, 
+            @Vergi3 /*cha_vergi3*/, @Vergi4 /*cha_vergi4*/, @Vergi5 /*cha_vergi5*/, @Vergi6 /*cha_vergi6*/, @Vergi7 /*cha_vergi7*/, @Vergi8 /*cha_vergi8*/, @Vergi9 /*cha_vergi9*/, 
+            @Vergi10 /*cha_vergi10*/, 0 /*cha_ilave_edilecek_kdv1*/, 0 /*cha_ilave_edilecek_kdv2*/,0 /*cha_ilave_edilecek_kdv3*/, 0 /*cha_ilave_edilecek_kdv4*/, 
+            0 /*cha_ilave_edilecek_kdv5*/, 0 /*cha_ilave_edilecek_kdv6*/, 0 /*cha_ilave_edilecek_kdv7*/, 0 /*cha_ilave_edilecek_kdv8*/, 0 /*cha_ilave_edilecek_kdv9*/, 0 /*cha_ilave_edilecek_kdv10*/
+            $chaValues17 $chaValues16);
     """;
     for (var line in fis.lines) {
       q +=
